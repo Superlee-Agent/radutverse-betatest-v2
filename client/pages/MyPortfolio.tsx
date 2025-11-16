@@ -88,20 +88,54 @@ const MyPortfolio = () => {
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <PortfolioHeader
           walletAddress={primaryWalletAddress}
-          assetCount={assets.length}
+          assetCount={totalAssets}
           onDisconnect={handleWalletDisconnect}
-          currentNetwork={network}
-          onNetworkChange={switchNetwork}
         />
 
         <div className="flex-1 overflow-y-auto">
           <div className="p-6 space-y-6">
-            {/* Balance Card */}
-            <BalanceCard
-              balance={balance}
-              isLoading={isLoading}
-              error={error}
-            />
+            {/* Balance Cards for both networks */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <BalanceCard
+                balance={balanceTestnet}
+                isLoading={isLoading}
+                error={error}
+                networkName="Story Testnet"
+              />
+              <BalanceCard
+                balance={balanceMainnet}
+                isLoading={isLoading}
+                error={error}
+                networkName="Story Mainnet"
+              />
+            </div>
+
+            {/* Total Assets Summary */}
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-4">
+                Total Assets Summary
+              </h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-slate-400 mb-2">Total Assets</p>
+                  <p className="text-3xl font-bold text-[#FF4DA6]">
+                    {totalAssets}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400 mb-2">Testnet Assets</p>
+                  <p className="text-2xl font-bold text-blue-400">
+                    {testnetAssets.length}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400 mb-2">Mainnet Assets</p>
+                  <p className="text-2xl font-bold text-green-400">
+                    {mainnetAssets.length}
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {/* IP Assets Section */}
             <div>
@@ -110,14 +144,14 @@ const MyPortfolio = () => {
                   Your IP Assets
                 </h3>
                 <p className="text-sm text-slate-400">
-                  {assets.length > 0
-                    ? `You own ${assets.length} IP Asset${assets.length !== 1 ? "s" : ""}`
-                    : "No IP assets yet"}
+                  {allAssets.length > 0
+                    ? `You own ${allAssets.length} IP Asset${allAssets.length !== 1 ? "s" : ""} across both networks`
+                    : "No IP assets yet on either network"}
                 </p>
               </div>
 
               <IpAssetsGrid
-                assets={assets}
+                assets={allAssets}
                 isLoading={isLoading}
                 error={error}
                 onRemix={handleRemix}
