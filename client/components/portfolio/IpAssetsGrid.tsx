@@ -12,6 +12,7 @@ export type IpAsset = {
   ownerAddress?: string;
   creator?: string;
   registrationDate?: string;
+  network?: "testnet" | "mainnet";
 };
 
 type IpAssetsGridProps = {
