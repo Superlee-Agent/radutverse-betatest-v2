@@ -9,6 +9,7 @@ import {
   PortfolioHeader,
 } from "@/components/portfolio";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
+import { useStoryNetwork } from "@/hooks/useStoryNetwork";
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
