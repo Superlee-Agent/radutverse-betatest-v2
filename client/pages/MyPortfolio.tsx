@@ -15,6 +15,7 @@ const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
+  const { network, switchNetwork } = useStoryNetwork();
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -27,9 +28,9 @@ const MyPortfolio = () => {
     return user?.wallet?.address ?? null;
   }, [wallets, user?.wallet?.address]);
 
-  // Fetch portfolio data
+  // Fetch portfolio data for the selected network
   const { balance, assets, isLoading, error, refresh } =
-    usePortfolioData(primaryWalletAddress);
+    usePortfolioData(primaryWalletAddress, network);
 
   // Handle wallet connection
   const handleWalletConnect = useCallback(() => {
