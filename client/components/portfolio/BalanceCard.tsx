@@ -4,6 +4,7 @@ type BalanceCardProps = {
   balance: string;
   isLoading?: boolean;
   error?: string | null;
+  networkName?: string;
 };
 
 const formatBalance = (balance: string): string => {
@@ -21,6 +22,7 @@ export const BalanceCard = ({
   balance,
   isLoading = false,
   error,
+  networkName = "Story Balance",
 }: BalanceCardProps) => {
   const displayBalance = formatBalance(balance);
 
@@ -28,7 +30,7 @@ export const BalanceCard = ({
     <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6">
       <div className="flex items-center justify-start mb-4">
         <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide">
-          Story Balance
+          {networkName}
         </h3>
       </div>
 
