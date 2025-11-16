@@ -1,0 +1,347 @@
+{
+  "entries": [
+    {
+      "hash": "2039a9bf138c465cdd8cb44e42d69289d9661f7df89fdcc9b5de702262e1e52b",
+      "metadata": {
+        "ipId": "0x8902efdf14be946d01222A26092C16fef16924e4",
+        "title": "hornet ",
+        "description": "",
+        "similarity": 0.32718126015774907,
+        "score": 0.22902688211042432,
+        "mediaType": "image",
+        "thumbnailUrl": null,
+        "ipaMetadataUri": "ipfs://QmfKZ9SJff3LozZkMY2FzLU4AbmAVbtVqyQAHBBqe23E1K",
+        "ownerAddress": "0x485b02dc1Cfd6Cdc3FBb8d3C8fcD0042455d375a",
+        "lastUpdatedAt": "2025-09-25T00:38:51.063921Z",
+        "isDerivative": false,
+        "parentsCount": 0,
+        "licenses": [
+          {
+            "licenseTemplateId": "0x2E896b0b2Fdb7457499B56AAaA4AE55BCB4Cd316",
+            "licenseTermsId": "1",
+            "templateName": "pil",
+            "templateMetadataUri": "https://github.com/storyprotocol/protocol-core/blob/main/PIL_Beta_Final_2024_02.pdf",
+            "terms": {
+              "uri": "https://github.com/piplabs/pil-document/blob/998c13e6ee1d04eb817aefd1fe16dfe8be3cd7a2/off-chain-terms/NCSR.json",
+              "currency": "0x0000000000000000000000000000000000000000",
+              "expiration": "0",
+              "transferable": true,
+              "commercialUse": false,
+              "royaltyPolicy": "0x0000000000000000000000000000000000000000",
+              "defaultMintingFee": "0",
+              "commercialRevShare": 0,
+              "derivativesAllowed": true,
+              "derivativesApproval": false,
+              "commercialRevCeiling": "0",
+              "derivativeRevCeiling": "0",
+              "commercialAttribution": false,
+              "commercializerChecker": "0x0000000000000000000000000000000000000000",
+              "derivativesReciprocal": true,
+              "derivativesAttribution": true,
+              "commercializerCheckerData": "0x"
+            },
+            "licensingConfig": {
+              "isSet": false,
+              "disabled": false,
+              "hookData": "",
+              "mintingFee": 0,
+              "licensingHook": "",
+              "commercialRevShare": 0,
+              "expectGroupRewardPool": "",
+              "expectMinimumGroupRewardShare": 0
+            },
+            "createdAt": "2025-09-25T00:38:51.633065Z",
+            "updatedAt": "2025-09-25T00:38:51.633066Z"
+          }
+        ],
+        "licenseTermsIds": [
+          "1"
+        ],
+        "licenseTemplates": [
+          null
+        ],
+        "timestamp": 1762064192206,
+        "hash": "2039a9bf138c465cdd8cb44e42d69289d9661f7df89fdcc9b5de702262e1e52b",
+        "pHash": "3c3f06c89cdc7000",
+        "visionDescription": "The image features a stylized character standing in a green landscape. The character wears a red cloak and white mask with two black eyes, reminiscent of a stylized helmet. They hold a needle-like weapon. The background consists of abstract green foliage with varying shades, giving a pixel art style. The overall color palette is dominated by greens and the red cloak, creating a contrast. The image is simplified with blocky shapes and lacks intricate detail."
+      }
+    },
+    {
+      "hash": "78c1f2d37c2b29c496456f2112e079ec64c7c07fbcc47a15f98819255ca3a123",
+      "metadata": {
+        "ipId": "0x1c75d3De21e86788F2D2266B45bEc3Da724D3443",
+        "title": "Story hoodie",
+        "description": "Razor hoodi3 by razornero",
+        "similarity": 0.464672180135717,
+        "score": 0.32527052609500184,
+        "mediaType": "image",
+        "thumbnailUrl": null,
+        "ipaMetadataUri": "https://ipfs.io/ipfs/QmPz2312JRvsX9Uc9mLconTeDiWDyBwRCBBEcQ48T4xFg8",
+        "ownerAddress": "0xa8Ec8cD44ab42B573505e68bc668Af05ED983E69",
+        "lastUpdatedAt": "2025-05-23T23:09:39.302426Z",
+        "isDerivative": false,
+        "parentsCount": 0,
+        "licenses": [
+          {
+            "licenseTemplateId": "0x2E896b0b2Fdb7457499B56AAaA4AE55BCB4Cd316",
+            "licenseTermsId": "3139",
+            "templateName": "pil",
+            "templateMetadataUri": "https://github.com/storyprotocol/protocol-core/blob/main/PIL_Beta_Final_2024_02.pdf",
+            "terms": {
+              "uri": "",
+              "currency": "0x1514000000000000000000000000000000000000",
+              "expiration": "0",
+              "transferable": true,
+              "commercialUse": true,
+              "royaltyPolicy": "0xBe54FB168b3c982b7AaE60dB6CF75Bd8447b390E",
+              "defaultMintingFee": "2789259969786076672",
+              "commercialRevShare": 15000000,
+              "derivativesAllowed": true,
+              "derivativesApproval": false,
+              "commercialRevCeiling": "0",
+              "derivativeRevCeiling": "0",
+              "commercialAttribution": true,
+              "commercializerChecker": "0x0000000000000000000000000000000000000000",
+              "derivativesReciprocal": true,
+              "derivativesAttribution": true,
+              "commercializerCheckerData": "0x0000000000000000000000000000000000000000"
+            },
+            "licensingConfig": {
+              "isSet": true,
+              "disabled": false,
+              "hookData": "0x0000000000000000000000000000000000000000",
+              "mintingFee": 2789259969786076700,
+              "licensingHook": "0x0000000000000000000000000000000000000000",
+              "commercialRevShare": 15000000,
+              "expectGroupRewardPool": "0x0000000000000000000000000000000000000000",
+              "expectMinimumGroupRewardShare": 0
+            },
+            "createdAt": "2025-07-17T23:26:03.970307Z",
+            "updatedAt": "2025-08-25T20:24:55.742643Z"
+          },
+          {
+            "licenseTemplateId": "0x2E896b0b2Fdb7457499B56AAaA4AE55BCB4Cd316",
+            "licenseTermsId": "10",
+            "templateName": "pil",
+            "templateMetadataUri": "https://github.com/storyprotocol/protocol-core/blob/main/PIL_Beta_Final_2024_02.pdf",
+            "terms": {
+              "uri": "https://github.com/piplabs/pil-document/blob/9a1f803fcf8101a8a78f1dcc929e6014e144ab56/off-chain-terms/CommercialUse.json",
+              "currency": "0x1514000000000000000000000000000000000000",
+              "expiration": "0",
+              "transferable": true,
+              "commercialUse": true,
+              "royaltyPolicy": "0xBe54FB168b3c982b7AaE60dB6CF75Bd8447b390E",
+              "defaultMintingFee": "0",
+              "commercialRevShare": 0,
+              "derivativesAllowed": false,
+              "derivativesApproval": false,
+              "commercialRevCeiling": "0",
+              "derivativeRevCeiling": "0",
+              "commercialAttribution": true,
+              "commercializerChecker": "0x0000000000000000000000000000000000000000",
+              "derivativesReciprocal": false,
+              "derivativesAttribution": false,
+              "commercializerCheckerData": "0x"
+            },
+            "licensingConfig": {
+              "isSet": true,
+              "disabled": true,
+              "hookData": "0x",
+              "mintingFee": 0,
+              "licensingHook": "0x0000000000000000000000000000000000000000",
+              "commercialRevShare": 0,
+              "expectGroupRewardPool": "0x0000000000000000000000000000000000000000",
+              "expectMinimumGroupRewardShare": 0
+            },
+            "createdAt": "2025-07-17T23:26:03.975424Z",
+            "updatedAt": "2025-08-25T20:24:55.742643Z"
+          }
+        ],
+        "licenseTermsIds": [
+          "3139",
+          "10"
+        ],
+        "licenseTemplates": [
+          null,
+          null
+        ],
+        "timestamp": 1762064256213,
+        "hash": "78c1f2d37c2b29c496456f2112e079ec64c7c07fbcc47a15f98819255ca3a123",
+        "pHash": "40604cffff700000",
+        "visionDescription": "The image features the word \"RAZOR\" in bold, red capital letters against a black background. The letter \"O\" is uniquely shaped, appearing larger and slightly irregular. Above the word, there is a white letter \"S\" symbol within a black circle. The overall style is minimalistic and striking, emphasizing contrast between the red text and black background."
+      }
+    },
+    {
+      "hash": "43679aced13d4dfa520200f806b968e264e1aa49262285115061ce68be239ec2",
+      "metadata": {
+        "ipId": "0xB4d956207777D17D4ED8Cf7DaCF37651766aDda7",
+        "title": "ChatGPT Image 18 mai 2025, 22_41_31 (3)",
+        "description": "APIL",
+        "similarity": 0.5,
+        "score": 0,
+        "mediaType": "image/png",
+        "thumbnailUrl": "https://dweb.link/ipfs/QmXpXzSJu8D1s65WVN72DLm5vLAXN9Gome3Kj4LENvm8oo",
+        "ipaMetadataUri": "https://ipfs.io/ipfs/QmbooB674WrRK4PE4TCCwsnVBiJvZEJK4GvFiEst5w8V6Y",
+        "ownerAddress": "0x1Eb18844ab577B5ad6FF35D1B6412839a4dCdf31",
+        "lastUpdatedAt": "2025-05-28T20:07:03.609811Z",
+        "isDerivative": false,
+        "parentsCount": 0,
+        "licenses": [
+          {
+            "licenseTemplateId": "0x2E896b0b2Fdb7457499B56AAaA4AE55BCB4Cd316",
+            "licenseTermsId": "21961",
+            "templateName": "pil",
+            "templateMetadataUri": "https://github.com/storyprotocol/protocol-core/blob/main/PIL_Beta_Final_2024_02.pdf",
+            "terms": {
+              "uri": "https://ipfs.io/ipfs/QmbK76GN3F7SRJR8XKpLuiRgKn3sq9tLt6rGkdfg67uTjD",
+              "currency": "0x1514000000000000000000000000000000000000",
+              "expiration": "0",
+              "transferable": true,
+              "commercialUse": false,
+              "royaltyPolicy": "0x0000000000000000000000000000000000000000",
+              "defaultMintingFee": "0",
+              "commercialRevShare": 0,
+              "derivativesAllowed": true,
+              "derivativesApproval": false,
+              "commercialRevCeiling": "0",
+              "derivativeRevCeiling": "0",
+              "commercialAttribution": false,
+              "commercializerChecker": "0x0000000000000000000000000000000000000000",
+              "derivativesReciprocal": true,
+              "derivativesAttribution": false,
+              "commercializerCheckerData": "0x0000000000000000000000000000000000000000"
+            },
+            "licensingConfig": {
+              "isSet": false,
+              "disabled": false,
+              "hookData": "",
+              "mintingFee": 0,
+              "licensingHook": "",
+              "commercialRevShare": 0,
+              "expectGroupRewardPool": "",
+              "expectMinimumGroupRewardShare": 0
+            },
+            "createdAt": "2025-07-18T00:25:16.87324Z",
+            "updatedAt": "2025-08-25T20:50:59.331619Z"
+          },
+          {
+            "licenseTemplateId": "0x2E896b0b2Fdb7457499B56AAaA4AE55BCB4Cd316",
+            "licenseTermsId": "22234",
+            "templateName": "pil",
+            "templateMetadataUri": "https://github.com/storyprotocol/protocol-core/blob/main/PIL_Beta_Final_2024_02.pdf",
+            "terms": {
+              "uri": "https://ipfs.io/ipfs/QmbK76GN3F7SRJR8XKpLuiRgKn3sq9tLt6rGkdfg67uTjD",
+              "currency": "0x1514000000000000000000000000000000000000",
+              "expiration": "0",
+              "transferable": true,
+              "commercialUse": false,
+              "royaltyPolicy": "0x0000000000000000000000000000000000000000",
+              "defaultMintingFee": "0",
+              "commercialRevShare": 0,
+              "derivativesAllowed": true,
+              "derivativesApproval": false,
+              "commercialRevCeiling": "0",
+              "derivativeRevCeiling": "0",
+              "commercialAttribution": false,
+              "commercializerChecker": "0x0000000000000000000000000000000000000000",
+              "derivativesReciprocal": true,
+              "derivativesAttribution": true,
+              "commercializerCheckerData": "0x0000000000000000000000000000000000000000"
+            },
+            "licensingConfig": {
+              "isSet": false,
+              "disabled": false,
+              "hookData": "",
+              "mintingFee": 0,
+              "licensingHook": "",
+              "commercialRevShare": 0,
+              "expectGroupRewardPool": "",
+              "expectMinimumGroupRewardShare": 0
+            },
+            "createdAt": "2025-07-18T00:25:16.877754Z",
+            "updatedAt": "2025-08-25T20:50:59.331619Z"
+          }
+        ],
+        "licenseTermsIds": [
+          "21961",
+          "22234"
+        ],
+        "licenseTemplates": [
+          null,
+          null
+        ],
+        "timestamp": 1762078663620,
+        "hash": "43679aced13d4dfa520200f806b968e264e1aa49262285115061ce68be239ec2",
+        "pHash": "027a72fef73c0000",
+        "visionDescription": "The image features an illustration of a character with stylized anime-like features. The character has short, wavy hair with alternating light and dark shades, creating a dynamic pattern. They have large, expressive eyes and a slight smile. The background is geometric, with lines and patterns intersecting and overlapping around the character's head, adding a futuristic or technological feel. Lightning bolts accentuate the corners of the image, emphasizing an energetic atmosphere. The image is monochromatic, primarily in shades of black, white, and gray. Below the character's face, the words \"APIL\" and \"STORY\" are prominently displayed in bold white text within separate rectangular frames."
+      }
+    },
+    {
+      "hash": "e59bbb47867a051d6ebe308afc21e8d7c0f16664bc4bca66d6835552f79c425f",
+      "metadata": {
+        "ipId": "0xDC64e78a7e1D6C74E8171015eC3699195cF125aA",
+        "title": "Mushy chill",
+        "description": "",
+        "similarity": 0.6319136400171315,
+        "score": 0.442339548011992,
+        "mediaType": "image/png",
+        "thumbnailUrl": "https://dweb.link/ipfs/QmXUY8cqh5e1HvVym3ou3br5PWSvsyQXfXBY4HonK8gk3n",
+        "ipaMetadataUri": "https://ipfs.io/ipfs/QmSaZtywT9Nt5G2guhTLcxVL3sgi6u235426fc9afDLG8p",
+        "ownerAddress": "0xDb819f7b4F275babBd19BCEDe38829d69143f660",
+        "lastUpdatedAt": "2025-08-27T12:47:09.207126Z",
+        "isDerivative": false,
+        "parentsCount": 0,
+        "licenses": [
+          {
+            "licenseTemplateId": "0x2E896b0b2Fdb7457499B56AAaA4AE55BCB4Cd316",
+            "licenseTermsId": "27999",
+            "templateName": "pil",
+            "templateMetadataUri": "https://github.com/storyprotocol/protocol-core/blob/main/PIL_Beta_Final_2024_02.pdf",
+            "terms": {
+              "uri": "https://ipfs.io/ipfs/QmbK76GN3F7SRJR8XKpLuiRgKn3sq9tLt6rGkdfg67uTjD",
+              "currency": "0x1514000000000000000000000000000000000000",
+              "expiration": "0",
+              "transferable": false,
+              "commercialUse": false,
+              "royaltyPolicy": "0x0000000000000000000000000000000000000000",
+              "defaultMintingFee": "0",
+              "commercialRevShare": 0,
+              "derivativesAllowed": true,
+              "derivativesApproval": false,
+              "commercialRevCeiling": "0",
+              "derivativeRevCeiling": "0",
+              "commercialAttribution": false,
+              "commercializerChecker": "0x0000000000000000000000000000000000000000",
+              "derivativesReciprocal": true,
+              "derivativesAttribution": false,
+              "commercializerCheckerData": "0x0000000000000000000000000000000000000000"
+            },
+            "licensingConfig": {
+              "isSet": false,
+              "disabled": false,
+              "hookData": "",
+              "mintingFee": 0,
+              "licensingHook": "",
+              "commercialRevShare": 0,
+              "expectGroupRewardPool": "",
+              "expectMinimumGroupRewardShare": 0
+            },
+            "createdAt": "2025-08-27T12:47:07.315391Z",
+            "updatedAt": "2025-08-27T12:47:07.315391Z"
+          }
+        ],
+        "licenseTermsIds": [
+          "27999"
+        ],
+        "licenseTemplates": [
+          null
+        ],
+        "timestamp": 1762079729257,
+        "hash": "e59bbb47867a051d6ebe308afc21e8d7c0f16664bc4bca66d6835552f79c425f",
+        "pHash": "fffffbc1898181ff",
+        "visionDescription": "A cute, plump, yellow chick is sitting on a red bean bag. The chick has large round eyes, an orange beak, and small wings that are holding a green drink with a straw. Its feet are small and orange. The background is a plain beige color. The illustration style is cartoonish and whimsical, with smooth lines and soft colors."
+      }
+    }
+  ],
+  "lastUpdated": 1762079729259
+}
