@@ -148,14 +148,12 @@ export const handleCheckIpAssets: RequestHandler = async (
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                options: {
-                  where: {
-                    ipAccountOwner: trimmedAddress,
-                  },
-                  pagination: {
-                    limit,
-                    offset,
-                  },
+                where: {
+                  ipAccountOwner: trimmedAddress,
+                },
+                pagination: {
+                  limit,
+                  offset,
                 },
               }),
               signal: controller.signal,
@@ -169,14 +167,12 @@ export const handleCheckIpAssets: RequestHandler = async (
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                options: {
-                  where: {
-                    ipAccountOwner: trimmedAddress,
-                  },
-                  pagination: {
-                    limit,
-                    offset,
-                  },
+                where: {
+                  ipAccountOwner: trimmedAddress,
+                },
+                pagination: {
+                  limit,
+                  offset,
                 },
               }),
               signal: controller.signal,
@@ -332,10 +328,8 @@ export const handleCheckIpAssets: RequestHandler = async (
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    options: {
-                      where: {
-                        ipId: asset.ipId,
-                      },
+                    where: {
+                      ipId: asset.ipId,
                     },
                   }),
                   signal: AbortSignal.timeout(5000),
