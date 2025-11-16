@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { parseEther, formatEther } from "viem";
+import { formatEther } from "viem";
+import { type NetworkType } from "@/lib/network-config";
 
 export type PortfolioAsset = {
   ipId: string;
@@ -23,6 +24,7 @@ export type PortfolioData = {
 
 export function usePortfolioData(
   walletAddress: string | null | undefined,
+  network: NetworkType = "testnet",
 ): PortfolioData {
   const [balance, setBalance] = useState<string>("0");
   const [assets, setAssets] = useState<PortfolioAsset[]>([]);
@@ -42,6 +44,7 @@ export function usePortfolioData(
       setError(null);
 
       // Fetch IP Assets using the existing API
+      // The API endpoint handles both testnet and mainnet queries
       const response = await fetch("/api/check-ip-assets", {
         method: "POST",
         headers: {
@@ -49,12 +52,16 @@ export function usePortfolioData(
         },
         body: JSON.stringify({
           address: walletAddress,
+          network, // Pass network parameter for filtering
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.details || "Failed to fetch IP assets");
+        throw new Error(
+          errorData.details ||
+          `Failed to fetch IP assets from ${network === "mainnet" ? "Story Mainnet" : "Story Testnet"}`,
+        );
       }
 
       const data = await response.json();
@@ -93,7 +100,7 @@ export function usePortfolioData(
     } finally {
       setIsLoading(false);
     }
-  }, [walletAddress]);
+  }, [walletAddress, network]);
 
   useEffect(() => {
     fetchPortfolioData();
