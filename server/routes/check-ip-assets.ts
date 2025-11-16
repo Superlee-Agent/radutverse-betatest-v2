@@ -379,11 +379,14 @@ export const handleCheckIpAssets: RequestHandler = async (
         const nftMetadata = asset.nftMetadata || {};
         const metadata = asset.metadata || {};
         const tokenMetadata = asset.tokenMetadata || {};
+        const ipaMetadata = asset.ipaMetadata || {};
 
         // Extract image URL from various possible fields
-        const imageUrl =
+        let imageUrl =
           asset.mediaUrl ||
           asset.imageUrl ||
+          ipaMetadata.image ||
+          ipaMetadata.imageUrl ||
           nftMetadata.imageUrl ||
           nftMetadata.image ||
           metadata.imageUrl ||
@@ -391,10 +394,16 @@ export const handleCheckIpAssets: RequestHandler = async (
           tokenMetadata.image ||
           null;
 
+        // Convert IPFS URIs to HTTP URLs if needed
+        if (imageUrl && imageUrl.startsWith("ipfs://")) {
+          imageUrl = convertIpfsUriToHttp(imageUrl);
+        }
+
         return {
           ipId: asset.ipId,
           title:
             asset.title ||
+            ipaMetadata.title ||
             metadata.title ||
             nftMetadata.name ||
             asset.name ||
@@ -405,6 +414,7 @@ export const handleCheckIpAssets: RequestHandler = async (
           ownerAddress: asset.ownerAddress || asset.ipAccountOwner,
           creator:
             asset.creator ||
+            ipaMetadata.creator ||
             nftMetadata.creator ||
             metadata.creator ||
             null,
