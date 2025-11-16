@@ -9,11 +9,13 @@ import {
   PortfolioHeader,
 } from "@/components/portfolio";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
+import { useStoryNetwork } from "@/hooks/useStoryNetwork";
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
+  const { network, switchNetwork } = useStoryNetwork();
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -26,9 +28,11 @@ const MyPortfolio = () => {
     return user?.wallet?.address ?? null;
   }, [wallets, user?.wallet?.address]);
 
-  // Fetch portfolio data
-  const { balance, assets, isLoading, error, refresh } =
-    usePortfolioData(primaryWalletAddress);
+  // Fetch portfolio data for the selected network
+  const { balance, assets, isLoading, error, refresh } = usePortfolioData(
+    primaryWalletAddress,
+    network,
+  );
 
   // Handle wallet connection
   const handleWalletConnect = useCallback(() => {
@@ -81,6 +85,8 @@ const MyPortfolio = () => {
           walletAddress={primaryWalletAddress}
           assetCount={assets.length}
           onDisconnect={handleWalletDisconnect}
+          currentNetwork={network}
+          onNetworkChange={switchNetwork}
         />
 
         <div className="flex-1 overflow-y-auto">

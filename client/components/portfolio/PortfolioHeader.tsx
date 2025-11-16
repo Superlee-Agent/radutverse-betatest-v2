@@ -1,16 +1,22 @@
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NetworkSelector } from "./NetworkSelector";
+import { type NetworkType } from "@/lib/network-config";
 
 type PortfolioHeaderProps = {
   walletAddress?: string | null;
   assetCount?: number;
   onDisconnect?: () => void;
+  currentNetwork?: NetworkType;
+  onNetworkChange?: (network: NetworkType) => void;
 };
 
 export const PortfolioHeader = ({
   walletAddress,
   assetCount = 0,
   onDisconnect,
+  currentNetwork = "testnet",
+  onNetworkChange,
 }: PortfolioHeaderProps) => {
   const truncateAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
@@ -36,6 +42,13 @@ export const PortfolioHeader = ({
         </div>
 
         <div className="flex items-center gap-4">
+          {onNetworkChange && (
+            <NetworkSelector
+              currentNetwork={currentNetwork}
+              onNetworkChange={onNetworkChange}
+            />
+          )}
+
           {assetCount !== undefined && (
             <div className="text-right">
               <p className="text-sm text-slate-400">IP Assets</p>
