@@ -2,11 +2,12 @@
 
 // Hapus import yang bermasalah (Request, Response)
 // Kita hanya menyisakan RequestHandler untuk anotasi fungsi secara keseluruhan
-import { RequestHandler } from "express"; 
+import { RequestHandler } from "express";
 
 // Definisikan tipe untuk body request agar TypeScript mengenali properti 'address'
 interface CheckIpAssetsRequestBody {
   address?: string;
+  network?: "testnet" | "mainnet";
 }
 
 const IDP_CHECK = new Map<string, { status: number; body: any; ts: number }>();
@@ -20,7 +21,7 @@ export const handleCheckIpAssets: RequestHandler = async (
     // Properti 'get' sekarang akan dikenali oleh kompiler TS karena tipe argumen adalah 'any'
     const idempotencyKey = (req.get("Idempotency-Key") ||
       req.get("Idempotency-Key")) as string | undefined;
-      
+
     if (idempotencyKey && IDP_CHECK.has(idempotencyKey)) {
       const cached = IDP_CHECK.get(idempotencyKey)!;
       if (Date.now() - cached.ts < 60_000) {
@@ -34,8 +35,7 @@ export const handleCheckIpAssets: RequestHandler = async (
 
     // Properti 'body' sekarang dikenali
     const requestBody = req.body as CheckIpAssetsRequestBody; // Tetap lakukan casting untuk type safety di dalam fungsi
-    const { address } = requestBody;
-
+    const { address, network = "testnet" } = requestBody;
 
     if (!address || typeof address !== "string") {
       return res.status(400).json({
@@ -226,11 +226,27 @@ export const handleCheckIpAssets: RequestHandler = async (
 
       const totalCount = allAssets.length;
 
+      // Transform assets to include required fields for portfolio display
+      const assets = allAssets.map((asset: any) => ({
+        ipId: asset.ipId,
+        title: asset.title || asset.name || "Untitled Asset",
+        mediaUrl: asset.mediaUrl,
+        mediaType: asset.mediaType,
+        thumbnailUrl: asset.thumbnailUrl,
+        ownerAddress: asset.ownerAddress,
+        creator: asset.creator,
+        registrationDate: asset.registrationDate,
+        parentsCount: asset.parentsCount,
+        ...asset,
+      }));
+
       const body = {
         address: trimmedAddress,
+        network,
         totalCount,
         originalCount,
         remixCount,
+        assets,
       };
       if (idempotencyKey)
         IDP_CHECK.set(idempotencyKey, { status: 200, body, ts: Date.now() });
