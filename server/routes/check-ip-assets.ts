@@ -227,11 +227,27 @@ export const handleCheckIpAssets: RequestHandler = async (
 
       const totalCount = allAssets.length;
 
+      // Transform assets to include required fields for portfolio display
+      const assets = allAssets.map((asset: any) => ({
+        ipId: asset.ipId,
+        title: asset.title || asset.name || "Untitled Asset",
+        mediaUrl: asset.mediaUrl,
+        mediaType: asset.mediaType,
+        thumbnailUrl: asset.thumbnailUrl,
+        ownerAddress: asset.ownerAddress,
+        creator: asset.creator,
+        registrationDate: asset.registrationDate,
+        parentsCount: asset.parentsCount,
+        ...asset,
+      }));
+
       const body = {
         address: trimmedAddress,
+        network,
         totalCount,
         originalCount,
         remixCount,
+        assets,
       };
       if (idempotencyKey)
         IDP_CHECK.set(idempotencyKey, { status: 200, body, ts: Date.now() });
