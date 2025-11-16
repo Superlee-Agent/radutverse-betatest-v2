@@ -35,7 +35,7 @@ export const handleCheckIpAssets: RequestHandler = async (
 
     // Properti 'body' sekarang dikenali
     const requestBody = req.body as CheckIpAssetsRequestBody; // Tetap lakukan casting untuk type safety di dalam fungsi
-    const { address } = requestBody;
+    const { address, network = "testnet" } = requestBody;
 
 
     if (!address || typeof address !== "string") {
