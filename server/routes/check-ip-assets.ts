@@ -12,6 +12,66 @@ interface CheckIpAssetsRequestBody {
 
 const IDP_CHECK = new Map<string, { status: number; body: any; ts: number }>();
 
+const PINATA_GATEWAY = process.env.PINATA_GATEWAY;
+
+function convertIpfsUriToHttp(uri: string): string {
+  if (!uri) return uri;
+
+  const PUBLIC_GATEWAY = "dweb.link";
+
+  if (uri.startsWith("ipfs://")) {
+    const cid = uri.replace("ipfs://", "");
+    return `https://${PUBLIC_GATEWAY}/ipfs/${cid}`;
+  }
+
+  if (uri.includes("ipfs.io/ipfs/")) {
+    const cid = uri.split("/ipfs/")[1];
+    return `https://${PUBLIC_GATEWAY}/ipfs/${cid}`;
+  }
+
+  if (uri.includes("mypinata.cloud")) {
+    return uri;
+  }
+
+  if (uri.includes("/ipfs/") && !uri.includes(PUBLIC_GATEWAY)) {
+    const cid = uri.split("/ipfs/")[1];
+    return `https://${PUBLIC_GATEWAY}/ipfs/${cid}`;
+  }
+
+  return uri;
+}
+
+async function fetchIpaMetadata(ipaMetadataUri: string): Promise<any> {
+  if (!ipaMetadataUri) return null;
+
+  try {
+    let url = ipaMetadataUri;
+
+    if (url.startsWith("ipfs://")) {
+      const cid = url.replace("ipfs://", "");
+      url = PINATA_GATEWAY
+        ? `https://${PINATA_GATEWAY}/ipfs/${cid}`
+        : `https://ipfs.io/ipfs/${cid}`;
+    }
+
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) {
+      console.warn(
+        `Failed to fetch IPA metadata from ${url}: ${response.status}`,
+      );
+      return null;
+    }
+
+    const metadata = await response.json();
+    return metadata;
+  } catch (error) {
+    console.warn(`Error fetching IPA metadata from ${ipaMetadataUri}:`, error);
+    return null;
+  }
+}
+
 // Menggunakan tipe any untuk req dan res agar kompiler tidak gagal
 export const handleCheckIpAssets: RequestHandler = async (
   req: any, // Kunci perbaikan: Menggunakan any
@@ -88,17 +148,40 @@ export const handleCheckIpAssets: RequestHandler = async (
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                where: {
-                  ownerAddress: trimmedAddress,
-                },
-                pagination: {
-                  limit,
-                  offset,
+                options: {
+                  where: {
+                    ipAccountOwner: trimmedAddress,
+                  },
+                  pagination: {
+                    limit,
+                    offset,
+                  },
                 },
               }),
               signal: controller.signal,
             },
-          );
+          ).catch(async () => {
+            // Fallback to v3 if v4 fails
+            return fetch("https://api.storyapis.com/api/v3/assets", {
+              method: "POST",
+              headers: {
+                "X-Api-Key": apiKey,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                options: {
+                  where: {
+                    ipAccountOwner: trimmedAddress,
+                  },
+                  pagination: {
+                    limit,
+                    offset,
+                  },
+                },
+              }),
+              signal: controller.signal,
+            });
+          });
 
           if (!response.ok) {
             const errorText = await response.text();
@@ -226,19 +309,117 @@ export const handleCheckIpAssets: RequestHandler = async (
 
       const totalCount = allAssets.length;
 
+      // Fetch additional metadata for each asset
+      const enrichedAssets = await Promise.all(
+        allAssets.map(async (asset: any) => {
+          let enrichedData = { ...asset };
+          let ipaMetadata: any = null;
+
+          // Fetch IPA metadata from IPFS if available
+          if (asset.ipaMetadataUri) {
+            ipaMetadata = await fetchIpaMetadata(asset.ipaMetadataUri);
+          }
+
+          // Try to fetch detailed asset information if we have an ipId
+          if (asset.ipId && !asset.metadata) {
+            try {
+              const detailResponse = await fetch(
+                "https://api.storyapis.com/api/v4/assets",
+                {
+                  method: "POST",
+                  headers: {
+                    "X-Api-Key": apiKey,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    options: {
+                      where: {
+                        ipId: asset.ipId,
+                      },
+                    },
+                  }),
+                  signal: AbortSignal.timeout(5000),
+                },
+              ).catch(() => null);
+
+              if (detailResponse?.ok) {
+                const detailData = await detailResponse.json();
+                const detailedAsset = Array.isArray(detailData)
+                  ? detailData[0]
+                  : detailData?.data?.[0];
+                if (detailedAsset) {
+                  enrichedData = {
+                    ...enrichedData,
+                    ...detailedAsset,
+                    metadata: detailedAsset.metadata || asset.metadata,
+                    nftMetadata: detailedAsset.nftMetadata || asset.nftMetadata,
+                  };
+                }
+              }
+            } catch {
+              // Silently continue if detail fetch fails
+            }
+          }
+
+          // Add IPA metadata to enriched data
+          if (ipaMetadata) {
+            enrichedData.ipaMetadata = ipaMetadata;
+          }
+
+          return enrichedData;
+        }),
+      );
+
       // Transform assets to include required fields for portfolio display
-      const assets = allAssets.map((asset: any) => ({
-        ipId: asset.ipId,
-        title: asset.title || asset.name || "Untitled Asset",
-        mediaUrl: asset.mediaUrl,
-        mediaType: asset.mediaType,
-        thumbnailUrl: asset.thumbnailUrl,
-        ownerAddress: asset.ownerAddress,
-        creator: asset.creator,
-        registrationDate: asset.registrationDate,
-        parentsCount: asset.parentsCount,
-        ...asset,
-      }));
+      const assets = enrichedAssets.map((asset: any) => {
+        // Extract metadata from multiple possible sources
+        const nftMetadata = asset.nftMetadata || {};
+        const metadata = asset.metadata || {};
+        const tokenMetadata = asset.tokenMetadata || {};
+        const ipaMetadata = asset.ipaMetadata || {};
+
+        // Extract image URL from various possible fields
+        let imageUrl =
+          asset.mediaUrl ||
+          asset.imageUrl ||
+          ipaMetadata.image ||
+          ipaMetadata.imageUrl ||
+          nftMetadata.imageUrl ||
+          nftMetadata.image ||
+          metadata.imageUrl ||
+          metadata.image ||
+          tokenMetadata.image ||
+          null;
+
+        // Convert IPFS URIs to HTTP URLs if needed
+        if (imageUrl && imageUrl.startsWith("ipfs://")) {
+          imageUrl = convertIpfsUriToHttp(imageUrl);
+        }
+
+        return {
+          ipId: asset.ipId,
+          title:
+            asset.title ||
+            ipaMetadata.title ||
+            metadata.title ||
+            nftMetadata.name ||
+            asset.name ||
+            "Untitled Asset",
+          mediaUrl: imageUrl,
+          mediaType: asset.mediaType || metadata.mediaType,
+          thumbnailUrl: imageUrl,
+          ownerAddress: asset.ownerAddress || asset.ipAccountOwner,
+          creator:
+            asset.creator ||
+            ipaMetadata.creator ||
+            nftMetadata.creator ||
+            metadata.creator ||
+            null,
+          registrationDate: asset.registrationDate || asset.blockTimestamp,
+          parentsCount: asset.parentsCount || 0,
+          ...asset,
+        };
+      });
 
       const body = {
         address: trimmedAddress,
