@@ -12,6 +12,7 @@ export type IpAsset = {
   ownerAddress?: string;
   creator?: string;
   registrationDate?: string;
+  network?: "testnet" | "mainnet";
 };
 
 type IpAssetsGridProps = {
@@ -140,9 +141,22 @@ export const IpAssetsGrid = ({
 
             {/* Asset Info */}
             <div className="p-4">
-              <h4 className="font-semibold text-slate-100 text-sm truncate mb-1">
-                {asset.title || "Untitled Asset"}
-              </h4>
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <h4 className="font-semibold text-slate-100 text-sm truncate flex-1">
+                  {asset.title || "Untitled Asset"}
+                </h4>
+                {asset.network && (
+                  <span
+                    className={`text-xs font-semibold px-2 py-1 rounded whitespace-nowrap flex-shrink-0 ${
+                      asset.network === "testnet"
+                        ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                        : "bg-green-500/20 text-green-300 border border-green-500/30"
+                    }`}
+                  >
+                    {asset.network === "testnet" ? "Testnet" : "Mainnet"}
+                  </span>
+                )}
+              </div>
 
               <div className="space-y-2 text-xs">
                 {asset.ipId && (
