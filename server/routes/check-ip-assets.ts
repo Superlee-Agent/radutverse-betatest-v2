@@ -7,6 +7,7 @@ import { RequestHandler } from "express";
 // Definisikan tipe untuk body request agar TypeScript mengenali properti 'address'
 interface CheckIpAssetsRequestBody {
   address?: string;
+  network?: "testnet" | "mainnet";
 }
 
 const IDP_CHECK = new Map<string, { status: number; body: any; ts: number }>();
