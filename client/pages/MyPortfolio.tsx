@@ -16,7 +16,8 @@ const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
-  const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>("testnet");
+  const [selectedNetwork, setSelectedNetwork] =
+    useState<NetworkType>("testnet");
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -95,7 +96,8 @@ const MyPortfolio = () => {
     return selectedNetwork === "testnet" ? balanceTestnet : balanceMainnet;
   }, [selectedNetwork, balanceTestnet, balanceMainnet]);
 
-  const networkDisplayName = selectedNetwork === "testnet" ? "Story Testnet" : "Story Mainnet";
+  const networkDisplayName =
+    selectedNetwork === "testnet" ? "Story Testnet" : "Story Mainnet";
 
   return (
     <DashboardLayout title="My Portfolio">
@@ -110,7 +112,9 @@ const MyPortfolio = () => {
           <div className="p-6 space-y-6">
             {/* Network Selector */}
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-slate-100">Chain Selection</h2>
+              <h2 className="text-lg font-semibold text-slate-100">
+                Chain Selection
+              </h2>
               <NetworkSelector
                 currentNetwork={selectedNetwork}
                 onNetworkChange={setSelectedNetwork}
