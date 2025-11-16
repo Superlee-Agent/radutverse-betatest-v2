@@ -253,18 +253,24 @@ export const handleCheckIpAssets: RequestHandler = async (
       const totalCount = allAssets.length;
 
       // Transform assets to include required fields for portfolio display
-      const assets = allAssets.map((asset: any) => ({
-        ipId: asset.ipId,
-        title: asset.title || asset.name || "Untitled Asset",
-        mediaUrl: asset.mediaUrl,
-        mediaType: asset.mediaType,
-        thumbnailUrl: asset.thumbnailUrl,
-        ownerAddress: asset.ownerAddress,
-        creator: asset.creator,
-        registrationDate: asset.registrationDate,
-        parentsCount: asset.parentsCount,
-        ...asset,
-      }));
+      const assets = allAssets.map((asset: any) => {
+        // Extract metadata from nftMetadata if available
+        const nftMetadata = asset.nftMetadata || {};
+        const metadata = asset.metadata || {};
+
+        return {
+          ipId: asset.ipId,
+          title: asset.title || metadata.title || nftMetadata.name || asset.name || "Untitled Asset",
+          mediaUrl: asset.mediaUrl || nftMetadata.imageUrl || metadata.mediaUrl,
+          mediaType: asset.mediaType || metadata.mediaType,
+          thumbnailUrl: asset.thumbnailUrl || nftMetadata.imageUrl,
+          ownerAddress: asset.ownerAddress || asset.ipAccountOwner,
+          creator: asset.creator || nftMetadata.creator,
+          registrationDate: asset.registrationDate || asset.blockTimestamp,
+          parentsCount: asset.parentsCount || 0,
+          ...asset,
+        };
+      });
 
       const body = {
         address: trimmedAddress,
