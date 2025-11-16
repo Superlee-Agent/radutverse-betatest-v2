@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -8,7 +8,9 @@ import {
   IpAssetsGrid,
   PortfolioHeader,
 } from "@/components/portfolio";
+import { NetworkSelector } from "@/components/portfolio/NetworkSelector";
 import { usePortfolioDataBothNetworks } from "@/hooks/usePortfolioDataBothNetworks";
+import type { NetworkType } from "@/lib/network-config";
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
