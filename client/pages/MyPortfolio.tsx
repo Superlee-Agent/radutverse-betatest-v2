@@ -83,6 +83,8 @@ const MyPortfolio = () => {
           walletAddress={primaryWalletAddress}
           assetCount={assets.length}
           onDisconnect={handleWalletDisconnect}
+          currentNetwork={network}
+          onNetworkChange={switchNetwork}
         />
 
         <div className="flex-1 overflow-y-auto">
