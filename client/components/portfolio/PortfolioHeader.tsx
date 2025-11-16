@@ -26,7 +26,10 @@ export const PortfolioHeader = ({
           <p className="text-sm text-slate-400">
             {walletAddress && (
               <>
-                Connected: <span className="text-[#FF4DA6]">{truncateAddress(walletAddress)}</span>
+                Connected:{" "}
+                <span className="text-[#FF4DA6]">
+                  {truncateAddress(walletAddress)}
+                </span>
               </>
             )}
           </p>

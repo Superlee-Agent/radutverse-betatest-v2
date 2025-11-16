@@ -21,7 +21,9 @@ export type PortfolioData = {
   refresh: () => Promise<void>;
 };
 
-export function usePortfolioData(walletAddress: string | null | undefined): PortfolioData {
+export function usePortfolioData(
+  walletAddress: string | null | undefined,
+): PortfolioData {
   const [balance, setBalance] = useState<string>("0");
   const [assets, setAssets] = useState<PortfolioAsset[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,9 +54,7 @@ export function usePortfolioData(walletAddress: string | null | undefined): Port
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.details || "Failed to fetch IP assets",
-        );
+        throw new Error(errorData.details || "Failed to fetch IP assets");
       }
 
       const data = await response.json();
