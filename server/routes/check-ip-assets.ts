@@ -12,6 +12,66 @@ interface CheckIpAssetsRequestBody {
 
 const IDP_CHECK = new Map<string, { status: number; body: any; ts: number }>();
 
+const PINATA_GATEWAY = process.env.PINATA_GATEWAY;
+
+function convertIpfsUriToHttp(uri: string): string {
+  if (!uri) return uri;
+
+  const PUBLIC_GATEWAY = "dweb.link";
+
+  if (uri.startsWith("ipfs://")) {
+    const cid = uri.replace("ipfs://", "");
+    return `https://${PUBLIC_GATEWAY}/ipfs/${cid}`;
+  }
+
+  if (uri.includes("ipfs.io/ipfs/")) {
+    const cid = uri.split("/ipfs/")[1];
+    return `https://${PUBLIC_GATEWAY}/ipfs/${cid}`;
+  }
+
+  if (uri.includes("mypinata.cloud")) {
+    return uri;
+  }
+
+  if (uri.includes("/ipfs/") && !uri.includes(PUBLIC_GATEWAY)) {
+    const cid = uri.split("/ipfs/")[1];
+    return `https://${PUBLIC_GATEWAY}/ipfs/${cid}`;
+  }
+
+  return uri;
+}
+
+async function fetchIpaMetadata(ipaMetadataUri: string): Promise<any> {
+  if (!ipaMetadataUri) return null;
+
+  try {
+    let url = ipaMetadataUri;
+
+    if (url.startsWith("ipfs://")) {
+      const cid = url.replace("ipfs://", "");
+      url = PINATA_GATEWAY
+        ? `https://${PINATA_GATEWAY}/ipfs/${cid}`
+        : `https://ipfs.io/ipfs/${cid}`;
+    }
+
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) {
+      console.warn(
+        `Failed to fetch IPA metadata from ${url}: ${response.status}`,
+      );
+      return null;
+    }
+
+    const metadata = await response.json();
+    return metadata;
+  } catch (error) {
+    console.warn(`Error fetching IPA metadata from ${ipaMetadataUri}:`, error);
+    return null;
+  }
+}
+
 // Menggunakan tipe any untuk req dan res agar kompiler tidak gagal
 export const handleCheckIpAssets: RequestHandler = async (
   req: any, // Kunci perbaikan: Menggunakan any
