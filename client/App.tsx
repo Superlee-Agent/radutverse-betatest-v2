@@ -41,7 +41,10 @@ const ensurePrivyAnalyticsFetchPatched = () => {
           : undefined;
 
     // Intercept analytics requests that may have CORS issues
-    if (url && (url.includes("analytics_events") || url.includes("edge.fullstory.com"))) {
+    if (
+      url &&
+      (url.includes("analytics_events") || url.includes("edge.fullstory.com"))
+    ) {
       return new Response(null, {
         status: 204,
         statusText: "No Content",
