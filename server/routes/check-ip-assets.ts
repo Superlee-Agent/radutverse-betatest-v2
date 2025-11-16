@@ -316,6 +316,12 @@ export const handleCheckIpAssets: RequestHandler = async (
       const enrichedAssets = await Promise.all(
         allAssets.map(async (asset: any) => {
           let enrichedData = { ...asset };
+          let ipaMetadata: any = null;
+
+          // Fetch IPA metadata from IPFS if available
+          if (asset.ipaMetadataUri) {
+            ipaMetadata = await fetchIpaMetadata(asset.ipaMetadataUri);
+          }
 
           // Try to fetch detailed asset information if we have an ipId
           if (asset.ipId && !asset.metadata) {
@@ -356,6 +362,11 @@ export const handleCheckIpAssets: RequestHandler = async (
             } catch {
               // Silently continue if detail fetch fails
             }
+          }
+
+          // Add IPA metadata to enriched data
+          if (ipaMetadata) {
+            enrichedData.ipaMetadata = ipaMetadata;
           }
 
           return enrichedData;
