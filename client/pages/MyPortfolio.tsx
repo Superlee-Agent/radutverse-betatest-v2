@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -8,12 +8,16 @@ import {
   IpAssetsGrid,
   PortfolioHeader,
 } from "@/components/portfolio";
+import { NetworkSelector } from "@/components/portfolio/NetworkSelector";
 import { usePortfolioDataBothNetworks } from "@/hooks/usePortfolioDataBothNetworks";
+import type { NetworkType } from "@/lib/network-config";
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
+  const [selectedNetwork, setSelectedNetwork] =
+    useState<NetworkType>("testnet");
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -83,6 +87,18 @@ const MyPortfolio = () => {
     );
   }
 
+  // Get filtered assets and balance based on selected network
+  const filteredAssets = useMemo(() => {
+    return selectedNetwork === "testnet" ? testnetAssets : mainnetAssets;
+  }, [selectedNetwork, testnetAssets, mainnetAssets]);
+
+  const selectedBalance = useMemo(() => {
+    return selectedNetwork === "testnet" ? balanceTestnet : balanceMainnet;
+  }, [selectedNetwork, balanceTestnet, balanceMainnet]);
+
+  const networkDisplayName =
+    selectedNetwork === "testnet" ? "Story Testnet" : "Story Mainnet";
+
   return (
     <DashboardLayout title="My Portfolio">
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -94,44 +110,43 @@ const MyPortfolio = () => {
 
         <div className="flex-1 overflow-y-auto">
           <div className="p-6 space-y-6">
-            {/* Balance Cards for both networks */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <BalanceCard
-                balance={balanceTestnet}
-                isLoading={isLoading}
-                error={error}
-                networkName="Story Testnet"
+            {/* Network Selector */}
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-slate-100">
+                Chain Selection
+              </h2>
+              <NetworkSelector
+                currentNetwork={selectedNetwork}
+                onNetworkChange={setSelectedNetwork}
               />
+            </div>
+
+            {/* Balance Card for selected network */}
+            <div>
               <BalanceCard
-                balance={balanceMainnet}
+                balance={selectedBalance}
                 isLoading={isLoading}
                 error={error}
-                networkName="Story Mainnet"
+                networkName={networkDisplayName}
               />
             </div>
 
             {/* Total Assets Summary */}
             <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-4">
-                Total Assets Summary
+                Assets Summary - {networkDisplayName}
               </h3>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-slate-400 mb-2">Total Assets</p>
                   <p className="text-3xl font-bold text-[#FF4DA6]">
+                    {filteredAssets.length}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-400 mb-2">All Networks</p>
+                  <p className="text-2xl font-bold text-slate-300">
                     {totalAssets}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400 mb-2">Testnet Assets</p>
-                  <p className="text-2xl font-bold text-blue-400">
-                    {testnetAssets.length}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400 mb-2">Mainnet Assets</p>
-                  <p className="text-2xl font-bold text-green-400">
-                    {mainnetAssets.length}
                   </p>
                 </div>
               </div>
@@ -144,14 +159,14 @@ const MyPortfolio = () => {
                   Your IP Assets
                 </h3>
                 <p className="text-sm text-slate-400">
-                  {allAssets.length > 0
-                    ? `You own ${allAssets.length} IP Asset${allAssets.length !== 1 ? "s" : ""} across both networks`
-                    : "No IP assets yet on either network"}
+                  {filteredAssets.length > 0
+                    ? `You own ${filteredAssets.length} IP Asset${filteredAssets.length !== 1 ? "s" : ""} on ${networkDisplayName}`
+                    : `No IP assets yet on ${networkDisplayName}`}
                 </p>
               </div>
 
               <IpAssetsGrid
-                assets={allAssets}
+                assets={filteredAssets}
                 isLoading={isLoading}
                 error={error}
                 onRemix={handleRemix}
