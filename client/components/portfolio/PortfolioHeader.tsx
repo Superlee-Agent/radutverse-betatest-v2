@@ -1,10 +1,14 @@
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NetworkSelector } from "./NetworkSelector";
+import { type NetworkType } from "@/lib/network-config";
 
 type PortfolioHeaderProps = {
   walletAddress?: string | null;
   assetCount?: number;
   onDisconnect?: () => void;
+  currentNetwork?: NetworkType;
+  onNetworkChange?: (network: NetworkType) => void;
 };
 
 export const PortfolioHeader = ({
