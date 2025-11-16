@@ -32,22 +32,25 @@ const ensurePrivyAnalyticsFetchPatched = () => {
   if (window.__privyAnalyticsFetchPatched) return;
   const originalFetch = window.fetch.bind(window);
   window.fetch = async (...args) => {
+    const input = args[0];
+    const url =
+      typeof input === "string"
+        ? input
+        : input instanceof Request
+          ? input.url
+          : undefined;
+
+    // Intercept analytics requests that may have CORS issues
+    if (url && (url.includes("analytics_events") || url.includes("edge.fullstory.com"))) {
+      return new Response(null, {
+        status: 204,
+        statusText: "No Content",
+      });
+    }
+
     try {
       return await originalFetch(...args);
     } catch (error) {
-      const input = args[0];
-      const url =
-        typeof input === "string"
-          ? input
-          : input instanceof Request
-            ? input.url
-            : undefined;
-      if (url && url.includes("edge.fullstory.com")) {
-        return new Response(null, {
-          status: 204,
-          statusText: "No Content",
-        });
-      }
       throw error;
     }
   };
