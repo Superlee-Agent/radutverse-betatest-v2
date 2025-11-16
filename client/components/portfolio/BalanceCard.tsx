@@ -26,17 +26,10 @@ export const BalanceCard = ({
 
   return (
     <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-start mb-4">
         <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide">
           Story Balance
         </h3>
-        <div className="p-2 rounded-lg bg-amber-400/10 flex-shrink-0">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2F2711b768900f460f84e959042bd91f7e%2Fbf98846c81d64a40907b1b44aeda1f23?format=webp&width=80"
-            alt="IP Token"
-            className="h-5 w-5"
-          />
-        </div>
       </div>
 
       {isLoading ? (
@@ -51,9 +44,18 @@ export const BalanceCard = ({
         </div>
       ) : (
         <div>
-          <p className="text-3xl font-bold text-amber-400 mb-1">
-            {displayBalance}
-          </p>
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-3xl font-bold text-amber-400">
+              {displayBalance}
+            </p>
+            <div className="p-2 rounded-lg bg-amber-400/10 flex-shrink-0">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2F2711b768900f460f84e959042bd91f7e%2Fbf98846c81d64a40907b1b44aeda1f23?format=webp&width=80"
+                alt="Story Token"
+                className="h-5 w-5"
+              />
+            </div>
+          </div>
           <p className="text-xs text-slate-500">Story (STORY) token</p>
         </div>
       )}
