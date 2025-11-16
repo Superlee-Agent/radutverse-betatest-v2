@@ -99,8 +99,14 @@ export function usePortfolioDataBothNetworks(
   }, [fetchPortfolioData]);
 
   const allAssets = [
-    ...testnetAssets.map((asset) => ({ ...asset, network: "testnet" as const })),
-    ...mainnetAssets.map((asset) => ({ ...asset, network: "mainnet" as const })),
+    ...testnetAssets.map((asset) => ({
+      ...asset,
+      network: "testnet" as const,
+    })),
+    ...mainnetAssets.map((asset) => ({
+      ...asset,
+      network: "mainnet" as const,
+    })),
   ];
 
   return {
