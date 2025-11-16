@@ -252,20 +252,91 @@ export const handleCheckIpAssets: RequestHandler = async (
 
       const totalCount = allAssets.length;
 
+      // Fetch additional metadata for each asset
+      const enrichedAssets = await Promise.all(
+        allAssets.map(async (asset: any) => {
+          let enrichedData = { ...asset };
+
+          // Try to fetch detailed asset information if we have an ipId
+          if (asset.ipId && !asset.metadata) {
+            try {
+              const detailResponse = await fetch(
+                "https://api.storyapis.com/api/v4/assets",
+                {
+                  method: "POST",
+                  headers: {
+                    "X-Api-Key": apiKey,
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    options: {
+                      where: {
+                        ipId: asset.ipId,
+                      },
+                    },
+                  }),
+                  signal: AbortSignal.timeout(5000),
+                },
+              ).catch(() => null);
+
+              if (detailResponse?.ok) {
+                const detailData = await detailResponse.json();
+                const detailedAsset = Array.isArray(detailData)
+                  ? detailData[0]
+                  : detailData?.data?.[0];
+                if (detailedAsset) {
+                  enrichedData = {
+                    ...enrichedData,
+                    ...detailedAsset,
+                    metadata: detailedAsset.metadata || asset.metadata,
+                    nftMetadata: detailedAsset.nftMetadata || asset.nftMetadata,
+                  };
+                }
+              }
+            } catch {
+              // Silently continue if detail fetch fails
+            }
+          }
+
+          return enrichedData;
+        }),
+      );
+
       // Transform assets to include required fields for portfolio display
-      const assets = allAssets.map((asset: any) => {
-        // Extract metadata from nftMetadata if available
+      const assets = enrichedAssets.map((asset: any) => {
+        // Extract metadata from multiple possible sources
         const nftMetadata = asset.nftMetadata || {};
         const metadata = asset.metadata || {};
+        const tokenMetadata = asset.tokenMetadata || {};
+
+        // Extract image URL from various possible fields
+        const imageUrl =
+          asset.mediaUrl ||
+          asset.imageUrl ||
+          nftMetadata.imageUrl ||
+          nftMetadata.image ||
+          metadata.imageUrl ||
+          metadata.image ||
+          tokenMetadata.image ||
+          null;
 
         return {
           ipId: asset.ipId,
-          title: asset.title || metadata.title || nftMetadata.name || asset.name || "Untitled Asset",
-          mediaUrl: asset.mediaUrl || nftMetadata.imageUrl || metadata.mediaUrl,
+          title:
+            asset.title ||
+            metadata.title ||
+            nftMetadata.name ||
+            asset.name ||
+            "Untitled Asset",
+          mediaUrl: imageUrl,
           mediaType: asset.mediaType || metadata.mediaType,
-          thumbnailUrl: asset.thumbnailUrl || nftMetadata.imageUrl,
+          thumbnailUrl: imageUrl,
           ownerAddress: asset.ownerAddress || asset.ipAccountOwner,
-          creator: asset.creator || nftMetadata.creator,
+          creator:
+            asset.creator ||
+            nftMetadata.creator ||
+            metadata.creator ||
+            null,
           registrationDate: asset.registrationDate || asset.blockTimestamp,
           parentsCount: asset.parentsCount || 0,
           ...asset,
