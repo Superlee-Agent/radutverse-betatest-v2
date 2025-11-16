@@ -42,6 +42,13 @@ export const PortfolioHeader = ({
         </div>
 
         <div className="flex items-center gap-4">
+          {onNetworkChange && (
+            <NetworkSelector
+              currentNetwork={currentNetwork}
+              onNetworkChange={onNetworkChange}
+            />
+          )}
+
           {assetCount !== undefined && (
             <div className="text-right">
               <p className="text-sm text-slate-400">IP Assets</p>
