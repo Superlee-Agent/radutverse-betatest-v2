@@ -88,12 +88,14 @@ export const handleCheckIpAssets: RequestHandler = async (
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                where: {
-                  ownerAddress: trimmedAddress,
-                },
-                pagination: {
-                  limit,
-                  offset,
+                options: {
+                  where: {
+                    ipAccountOwner: trimmedAddress,
+                  },
+                  pagination: {
+                    limit,
+                    offset,
+                  },
                 },
               }),
               signal: controller.signal,
