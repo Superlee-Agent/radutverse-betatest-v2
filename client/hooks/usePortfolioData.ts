@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { formatEther } from "viem";
-import { type NetworkType } from "@/lib/network-config";
+import { formatEther, createPublicClient, http } from "viem";
+import { type NetworkType, getNetworkConfig } from "@/lib/network-config";
 
 export type PortfolioAsset = {
   ipId: string;
