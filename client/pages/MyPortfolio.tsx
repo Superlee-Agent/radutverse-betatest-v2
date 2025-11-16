@@ -8,14 +8,12 @@ import {
   IpAssetsGrid,
   PortfolioHeader,
 } from "@/components/portfolio";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
-import { useStoryNetwork } from "@/hooks/useStoryNetwork";
+import { usePortfolioDataBothNetworks } from "@/hooks/usePortfolioDataBothNetworks";
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
-  const { network, switchNetwork } = useStoryNetwork();
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -28,11 +26,18 @@ const MyPortfolio = () => {
     return user?.wallet?.address ?? null;
   }, [wallets, user?.wallet?.address]);
 
-  // Fetch portfolio data for the selected network
-  const { balance, assets, isLoading, error, refresh } = usePortfolioData(
-    primaryWalletAddress,
-    network,
-  );
+  // Fetch portfolio data from both networks
+  const {
+    totalAssets,
+    allAssets,
+    balanceTestnet,
+    balanceMainnet,
+    testnetAssets,
+    mainnetAssets,
+    isLoading,
+    error,
+    refresh,
+  } = usePortfolioDataBothNetworks(primaryWalletAddress);
 
   // Handle wallet connection
   const handleWalletConnect = useCallback(() => {
