@@ -15,6 +15,8 @@ export const PortfolioHeader = ({
   walletAddress,
   assetCount = 0,
   onDisconnect,
+  currentNetwork = "testnet",
+  onNetworkChange,
 }: PortfolioHeaderProps) => {
   const truncateAddress = (addr: string) => {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
