@@ -157,7 +157,7 @@ export const handleCheckIpAssets: RequestHandler = async (
                   offset,
                 },
                 where: {
-                  ipAccountOwner: trimmedAddress,
+                  ownerAddress: trimmedAddress,
                 },
               }),
               signal: controller.signal,
@@ -180,7 +180,7 @@ export const handleCheckIpAssets: RequestHandler = async (
                   offset,
                 },
                 where: {
-                  ipAccountOwner: trimmedAddress,
+                  ownerAddress: trimmedAddress,
                 },
               }),
               signal: controller.signal,
