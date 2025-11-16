@@ -12,7 +12,9 @@ export const STORY_NETWORKS = {
     id: "story",
     chainId: 1514,
     name: "Story Mainnet",
-    rpc: import.meta.env.VITE_PUBLIC_STORY_MAINNET_RPC || "https://mainnet.storyrpc.io",
+    rpc:
+      import.meta.env.VITE_PUBLIC_STORY_MAINNET_RPC ||
+      "https://mainnet.storyrpc.io",
     apiBase: "https://api.storyapis.com/api/v4",
     explorer: "https://www.storyscan.io",
     currency: "IP",

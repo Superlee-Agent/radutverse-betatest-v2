@@ -29,8 +29,10 @@ const MyPortfolio = () => {
   }, [wallets, user?.wallet?.address]);
 
   // Fetch portfolio data for the selected network
-  const { balance, assets, isLoading, error, refresh } =
-    usePortfolioData(primaryWalletAddress, network);
+  const { balance, assets, isLoading, error, refresh } = usePortfolioData(
+    primaryWalletAddress,
+    network,
+  );
 
   // Handle wallet connection
   const handleWalletConnect = useCallback(() => {

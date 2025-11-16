@@ -12,7 +12,9 @@ export function useStoryNetwork() {
 
   // Load network preference on mount
   useEffect(() => {
-    const saved = localStorage.getItem("storyNetworkPreference") as NetworkType | null;
+    const saved = localStorage.getItem(
+      "storyNetworkPreference",
+    ) as NetworkType | null;
     if (saved && (saved === "mainnet" || saved === "testnet")) {
       setNetworkState(saved);
     }

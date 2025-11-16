@@ -60,7 +60,7 @@ export function usePortfolioData(
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
           errorData.details ||
-          `Failed to fetch IP assets from ${network === "mainnet" ? "Story Mainnet" : "Story Testnet"}`,
+            `Failed to fetch IP assets from ${network === "mainnet" ? "Story Mainnet" : "Story Testnet"}`,
         );
       }
 
