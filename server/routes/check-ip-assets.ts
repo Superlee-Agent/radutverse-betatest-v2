@@ -162,28 +162,25 @@ export const handleCheckIpAssets: RequestHandler = async (
             },
           ).catch(async () => {
             // Fallback to v3 if v4 fails
-            return fetch(
-              "https://api.storyapis.com/api/v3/assets",
-              {
-                method: "POST",
-                headers: {
-                  "X-Api-Key": apiKey,
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  options: {
-                    where: {
-                      ipAccountOwner: trimmedAddress,
-                    },
-                    pagination: {
-                      limit,
-                      offset,
-                    },
-                  },
-                }),
-                signal: controller.signal,
+            return fetch("https://api.storyapis.com/api/v3/assets", {
+              method: "POST",
+              headers: {
+                "X-Api-Key": apiKey,
+                "Content-Type": "application/json",
               },
-            );
+              body: JSON.stringify({
+                options: {
+                  where: {
+                    ipAccountOwner: trimmedAddress,
+                  },
+                  pagination: {
+                    limit,
+                    offset,
+                  },
+                },
+              }),
+              signal: controller.signal,
+            });
           });
 
           if (!response.ok) {

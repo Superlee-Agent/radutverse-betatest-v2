@@ -51,7 +51,9 @@ export const BalanceCard = ({
         </div>
       ) : (
         <div>
-          <p className="text-3xl font-bold text-amber-400 mb-1">{displayBalance}</p>
+          <p className="text-3xl font-bold text-amber-400 mb-1">
+            {displayBalance}
+          </p>
           <p className="text-xs text-slate-500">Story (STORY) token</p>
         </div>
       )}
