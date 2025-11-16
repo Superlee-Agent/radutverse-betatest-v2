@@ -43,6 +43,26 @@ export function usePortfolioData(
       setIsLoading(true);
       setError(null);
 
+      // Get network configuration for RPC endpoint
+      const networkConfig = getNetworkConfig(network);
+
+      // Fetch balance from the blockchain
+      let fetchedBalance = "0";
+      try {
+        const publicClient = createPublicClient({
+          transport: http(networkConfig.rpc),
+        });
+
+        const balanceInWei = await publicClient.getBalance({
+          address: walletAddress as `0x${string}`,
+        });
+
+        fetchedBalance = formatEther(balanceInWei);
+      } catch (balanceError) {
+        console.warn("Failed to fetch balance from blockchain:", balanceError);
+        fetchedBalance = "0";
+      }
+
       // Fetch IP Assets using the existing API
       // The API endpoint handles both testnet and mainnet queries
       const response = await fetch("/api/check-ip-assets", {
@@ -52,7 +72,7 @@ export function usePortfolioData(
         },
         body: JSON.stringify({
           address: walletAddress,
-          network, // Pass network parameter for filtering
+          network,
         }),
       });
 
@@ -67,29 +87,11 @@ export function usePortfolioData(
       const data = await response.json();
 
       if (data.ok && Array.isArray(data.assets)) {
-        // Transform assets to match our portfolio format
-        const portfolioAssets: PortfolioAsset[] = data.assets.map(
-          (asset: any) => ({
-            ipId: asset.ipId,
-            title: asset.title || asset.name || "Untitled Asset",
-            mediaUrl: asset.mediaUrl,
-            mediaType: asset.mediaType,
-            thumbnailUrl: asset.thumbnailUrl,
-            ownerAddress: asset.ownerAddress,
-            creator: asset.creator,
-            registrationDate: asset.registrationDate,
-            ...asset,
-          }),
-        );
-
-        setAssets(portfolioAssets);
-
-        // For now, balance is hardcoded or would need a separate API call
-        // The Story chain balance would be fetched from a blockchain RPC call
-        setBalance("0.00");
+        setAssets(data.assets);
+        setBalance(fetchedBalance);
       } else {
         setAssets([]);
-        setBalance("0.00");
+        setBalance(fetchedBalance);
       }
     } catch (err) {
       const errorMessage =
