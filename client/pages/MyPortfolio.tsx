@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { formatEther, createPublicClient, http } from "viem";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import {
   ConnectWalletView,
@@ -8,16 +9,28 @@ import {
   IpAssetsGrid,
   PortfolioHeader,
 } from "@/components/portfolio";
-import { NetworkSelector } from "@/components/portfolio/NetworkSelector";
-import { usePortfolioDataBothNetworks } from "@/hooks/usePortfolioDataBothNetworks";
-import type { NetworkType } from "@/lib/network-config";
+import { getNetworkConfig } from "@/lib/network-config";
+
+type PortfolioAsset = {
+  ipId: string;
+  title: string;
+  mediaUrl?: string;
+  mediaType?: string;
+  thumbnailUrl?: string;
+  ownerAddress?: string;
+  creator?: string;
+  registrationDate?: string;
+};
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
-  const [selectedNetwork, setSelectedNetwork] =
-    useState<NetworkType>("mainnet");
+
+  const [assets, setAssets] = useState<PortfolioAsset[]>([]);
+  const [balance, setBalance] = useState<string>("0");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -30,18 +43,80 @@ const MyPortfolio = () => {
     return user?.wallet?.address ?? null;
   }, [wallets, user?.wallet?.address]);
 
-  // Fetch portfolio data from both networks
-  const {
-    totalAssets,
-    allAssets,
-    balanceTestnet,
-    balanceMainnet,
-    testnetAssets,
-    mainnetAssets,
-    isLoading,
-    error,
-    refresh,
-  } = usePortfolioDataBothNetworks(primaryWalletAddress);
+  // Fetch portfolio data only from mainnet
+  useEffect(() => {
+    if (!primaryWalletAddress) {
+      setAssets([]);
+      setBalance("0");
+      setError(null);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const networkConfig = getNetworkConfig("mainnet");
+
+        // Fetch balance
+        try {
+          const publicClient = createPublicClient({
+            transport: http(networkConfig.rpc),
+          });
+
+          const balanceInWei = await publicClient.getBalance({
+            address: primaryWalletAddress as `0x${string}`,
+          });
+
+          setBalance(formatEther(balanceInWei));
+        } catch (balanceError) {
+          console.warn(
+            "Failed to fetch balance from mainnet blockchain:",
+            balanceError,
+          );
+          setBalance("0");
+        }
+
+        // Fetch IP Assets
+        const response = await fetch("/api/check-ip-assets", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: primaryWalletAddress,
+            network: "mainnet",
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          setError(errorData.details || "Failed to fetch IP assets");
+          setAssets([]);
+          return;
+        }
+
+        const data = await response.json();
+        if (data.ok && Array.isArray(data.assets)) {
+          setAssets(data.assets);
+          setError(null);
+        } else {
+          setAssets([]);
+          setError(null);
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to load portfolio data";
+        setError(errorMessage);
+        setAssets([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [primaryWalletAddress]);
 
   // Handle wallet connection
   const handleWalletConnect = useCallback(() => {
@@ -87,66 +162,37 @@ const MyPortfolio = () => {
     );
   }
 
-  // Get filtered assets and balance based on selected network
-  const filteredAssets = useMemo(() => {
-    return selectedNetwork === "testnet" ? testnetAssets : mainnetAssets;
-  }, [selectedNetwork, testnetAssets, mainnetAssets]);
-
-  const selectedBalance = useMemo(() => {
-    return selectedNetwork === "testnet" ? balanceTestnet : balanceMainnet;
-  }, [selectedNetwork, balanceTestnet, balanceMainnet]);
-
-  const networkDisplayName =
-    selectedNetwork === "testnet" ? "Story Testnet" : "Story Mainnet";
-
   return (
     <DashboardLayout title="My Portfolio">
       <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         <PortfolioHeader
           walletAddress={primaryWalletAddress}
-          assetCount={totalAssets}
+          assetCount={assets.length}
           onDisconnect={handleWalletDisconnect}
         />
 
         <div className="flex-1 overflow-y-auto">
           <div className="p-6 space-y-6">
-            {/* Network Selector */}
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-slate-100">
-                Chain Selection
-              </h2>
-              <NetworkSelector
-                currentNetwork={selectedNetwork}
-                onNetworkChange={setSelectedNetwork}
-              />
-            </div>
-
-            {/* Balance Card for selected network */}
+            {/* Balance Card */}
             <div>
               <BalanceCard
-                balance={selectedBalance}
+                balance={balance}
                 isLoading={isLoading}
                 error={error}
-                networkName={networkDisplayName}
+                networkName="Story Mainnet"
               />
             </div>
 
             {/* Total Assets Summary */}
             <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-4">
-                Assets Summary - {networkDisplayName}
+                Assets Summary - Story Mainnet
               </h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <div>
                   <p className="text-sm text-slate-400 mb-2">Total Assets</p>
                   <p className="text-3xl font-bold text-[#FF4DA6]">
-                    {filteredAssets.length}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-slate-400 mb-2">All Networks</p>
-                  <p className="text-2xl font-bold text-slate-300">
-                    {totalAssets}
+                    {assets.length}
                   </p>
                 </div>
               </div>
@@ -159,14 +205,14 @@ const MyPortfolio = () => {
                   Your IP Assets
                 </h3>
                 <p className="text-sm text-slate-400">
-                  {filteredAssets.length > 0
-                    ? `You own ${filteredAssets.length} IP Asset${filteredAssets.length !== 1 ? "s" : ""} on ${networkDisplayName}`
-                    : `No IP assets yet on ${networkDisplayName}`}
+                  {assets.length > 0
+                    ? `You own ${assets.length} IP Asset${assets.length !== 1 ? "s" : ""} on Story Mainnet`
+                    : "No IP assets yet on Story Mainnet"}
                 </p>
               </div>
 
               <IpAssetsGrid
-                assets={filteredAssets}
+                assets={assets}
                 isLoading={isLoading}
                 error={error}
                 onRemix={handleRemix}

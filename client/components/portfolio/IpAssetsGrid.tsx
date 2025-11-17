@@ -145,17 +145,6 @@ export const IpAssetsGrid = ({
                 <h4 className="font-semibold text-slate-100 text-sm truncate flex-1">
                   {asset.title || "Untitled Asset"}
                 </h4>
-                {asset.network && (
-                  <span
-                    className={`text-xs font-semibold px-2 py-1 rounded whitespace-nowrap flex-shrink-0 ${
-                      asset.network === "testnet"
-                        ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-                        : "bg-green-500/20 text-green-300 border border-green-500/30"
-                    }`}
-                  >
-                    {asset.network === "testnet" ? "Testnet" : "Mainnet"}
-                  </span>
-                )}
               </div>
 
               <div className="space-y-2 text-xs">
