@@ -17,7 +17,7 @@ const MyPortfolio = () => {
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
   const [selectedNetwork, setSelectedNetwork] =
-    useState<NetworkType>("testnet");
+    useState<NetworkType>("mainnet");
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {

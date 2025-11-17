@@ -18,9 +18,6 @@ export const NetworkSelector = ({
         onChange={(e) => onNetworkChange(e.target.value as NetworkType)}
         className="bg-transparent text-sm font-medium text-slate-200 border-0 outline-none cursor-pointer hover:text-[#FF4DA6] transition-colors"
       >
-        <option value="testnet" className="bg-slate-900 text-slate-100">
-          Testnet (Aeneid)
-        </option>
         <option value="mainnet" className="bg-slate-900 text-slate-100">
           Mainnet
         </option>

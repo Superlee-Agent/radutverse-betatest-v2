@@ -28,13 +28,13 @@ export function getNetworkConfig(network: NetworkType) {
 }
 
 export function getDefaultNetwork(): NetworkType {
-  // Check if mainnet is explicitly requested
+  // Check if testnet is explicitly requested
   const preferredNetwork = localStorage.getItem("storyNetworkPreference");
-  if (preferredNetwork === "mainnet") {
-    return "mainnet";
+  if (preferredNetwork === "testnet") {
+    return "testnet";
   }
-  // Default to testnet for backward compatibility
-  return "testnet";
+  // Default to mainnet
+  return "mainnet";
 }
 
 export function setPreferredNetwork(network: NetworkType) {
