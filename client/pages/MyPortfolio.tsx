@@ -71,7 +71,10 @@ const MyPortfolio = () => {
 
           setBalance(formatEther(balanceInWei));
         } catch (balanceError) {
-          console.warn("Failed to fetch balance from mainnet blockchain:", balanceError);
+          console.warn(
+            "Failed to fetch balance from mainnet blockchain:",
+            balanceError,
+          );
           setBalance("0");
         }
 
@@ -103,7 +106,8 @@ const MyPortfolio = () => {
           setError(null);
         }
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Failed to load portfolio data";
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to load portfolio data";
         setError(errorMessage);
         setAssets([]);
       } finally {
