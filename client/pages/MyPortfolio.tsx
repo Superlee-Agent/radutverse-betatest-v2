@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { formatEther, createPublicClient, http } from "viem";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import {
   ConnectWalletView,
@@ -8,16 +9,28 @@ import {
   IpAssetsGrid,
   PortfolioHeader,
 } from "@/components/portfolio";
-import { NetworkSelector } from "@/components/portfolio/NetworkSelector";
-import { usePortfolioDataBothNetworks } from "@/hooks/usePortfolioDataBothNetworks";
-import type { NetworkType } from "@/lib/network-config";
+import { getNetworkConfig } from "@/lib/network-config";
+
+type PortfolioAsset = {
+  ipId: string;
+  title: string;
+  mediaUrl?: string;
+  mediaType?: string;
+  thumbnailUrl?: string;
+  ownerAddress?: string;
+  creator?: string;
+  registrationDate?: string;
+};
 
 const MyPortfolio = () => {
   const navigate = useNavigate();
   const { ready, authenticated, login, logout, user } = usePrivy();
   const { wallets } = useWallets();
-  const [selectedNetwork, setSelectedNetwork] =
-    useState<NetworkType>("mainnet");
+
+  const [assets, setAssets] = useState<PortfolioAsset[]>([]);
+  const [balance, setBalance] = useState<string>("0");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Get primary wallet address
   const primaryWalletAddress = useMemo(() => {
@@ -30,18 +43,76 @@ const MyPortfolio = () => {
     return user?.wallet?.address ?? null;
   }, [wallets, user?.wallet?.address]);
 
-  // Fetch portfolio data from both networks
-  const {
-    totalAssets,
-    allAssets,
-    balanceTestnet,
-    balanceMainnet,
-    testnetAssets,
-    mainnetAssets,
-    isLoading,
-    error,
-    refresh,
-  } = usePortfolioDataBothNetworks(primaryWalletAddress);
+  // Fetch portfolio data only from mainnet
+  useEffect(() => {
+    if (!primaryWalletAddress) {
+      setAssets([]);
+      setBalance("0");
+      setError(null);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const networkConfig = getNetworkConfig("mainnet");
+
+        // Fetch balance
+        try {
+          const publicClient = createPublicClient({
+            transport: http(networkConfig.rpc),
+          });
+
+          const balanceInWei = await publicClient.getBalance({
+            address: primaryWalletAddress as `0x${string}`,
+          });
+
+          setBalance(formatEther(balanceInWei));
+        } catch (balanceError) {
+          console.warn("Failed to fetch balance from mainnet blockchain:", balanceError);
+          setBalance("0");
+        }
+
+        // Fetch IP Assets
+        const response = await fetch("/api/check-ip-assets", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            address: primaryWalletAddress,
+            network: "mainnet",
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          setError(errorData.details || "Failed to fetch IP assets");
+          setAssets([]);
+          return;
+        }
+
+        const data = await response.json();
+        if (data.ok && Array.isArray(data.assets)) {
+          setAssets(data.assets);
+          setError(null);
+        } else {
+          setAssets([]);
+          setError(null);
+        }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to load portfolio data";
+        setError(errorMessage);
+        setAssets([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [primaryWalletAddress]);
 
   // Handle wallet connection
   const handleWalletConnect = useCallback(() => {
